@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 15, 2022 at 07:08 PM
--- Server version: 10.4.24-MariaDB
--- PHP Version: 7.4.29
+-- Generation Time: Jan 05, 2023 at 03:46 PM
+-- Server version: 10.4.27-MariaDB
+-- PHP Version: 8.1.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -37,7 +37,7 @@ CREATE TABLE `blog` (
   `content` longtext NOT NULL,
   `status` varchar(255) NOT NULL,
   `time` int(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `blog`
@@ -64,7 +64,7 @@ CREATE TABLE `category` (
   `id` int(255) NOT NULL,
   `category` varchar(255) NOT NULL,
   `time` int(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `category`
@@ -95,7 +95,7 @@ CREATE TABLE `comment` (
   `content` varchar(255) NOT NULL,
   `img` varchar(255) NOT NULL DEFAULT 'img.png',
   `time` int(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `comment`
@@ -127,17 +127,17 @@ CREATE TABLE `deposit` (
   `amount` int(255) NOT NULL,
   `status` varchar(255) NOT NULL DEFAULT 'Pending',
   `time` int(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `deposit`
 --
 
 INSERT INTO `deposit` (`id`, `pid`, `method`, `pmn_address`, `tr_id`, `amount`, `status`, `time`) VALUES
-(1, 1, 'Bkash', 'd9729feb74992cc3482b350163a1a010', '277f255555a1e4ff124bdacc528b815d', 310, 'Success', 0),
-(2, 1, 'Nogod', '27d779cba60f2b5d48debdd970c8e732', 'sdf', 343, 'Pending', 0),
 (3, 1, 'Rocket', 'sadasd', 'asdsd', 222, 'Success', 0),
-(4, 1, '444444', '123456789', 'sdfsdfsdfsdfsdf', 5000, 'Pending', 0);
+(4, 1, '444444', '123456789', 'sdfsdfsdfsdfsdf', 5000, 'Pending', 0),
+(5, 1, '444444', '0123123123', 'dsfs2fds5fsdf2sd6f5s2f', 5000, 'Pending', 0),
+(6, 1, '3333332', 'sdfsdfsdf', '3343', 3333, 'Pending', 1672894705);
 
 -- --------------------------------------------------------
 
@@ -151,7 +151,7 @@ CREATE TABLE `pages` (
   `title` varchar(255) NOT NULL,
   `content` longtext NOT NULL,
   `description` longtext NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `pages`
@@ -177,7 +177,7 @@ CREATE TABLE `payment` (
   `pmn_method` varchar(255) NOT NULL,
   `pmn_info` varchar(255) NOT NULL,
   `status` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `payment`
@@ -208,15 +208,14 @@ CREATE TABLE `person` (
   `balance` int(255) NOT NULL,
   `terms` varchar(255) NOT NULL DEFAULT 'Desline',
   `time` int(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `person`
 --
 
 INSERT INTO `person` (`id`, `name`, `phone`, `address`, `email`, `password`, `role`, `file_name`, `balance`, `terms`, `time`) VALUES
-(1, 'admin', '01784489515', 'Sirajganj, Dhaka, Bangladesh', 'admin@gmail.com', '81dc9bdb52d04dc20036dbd8313ed055', 'Admin', '634af2216fb544.83705756.jpg', 5000, '', 0),
-(5, 'sohan', '1234558', 'Sirajganj, Dhaka, Bangladesh', 'sohan@gmail.com', '81dc9bdb52d04dc20036dbd8313ed055', 'Moderator', '634af2216fb544.83705756.jpg', 200, 'Desline', 1670579900),
+(1, 'Admin', '1234558', 'Sirajganj, Dhaka, Bangladesh', 'admin@gmail.com', '81dc9bdb52d04dc20036dbd8313ed055', 'Admin', '634af2216fb544.83705756.jpg', 200, 'Desline', 1670579900),
 (6, 'munna', '1234558', 'Sirajganj, Dhaka, Bangladesh', 'munna@gmail.com', '81dc9bdb52d04dc20036dbd8313ed055', 'User', 'avatar.jpg', 100, '', 1670579900);
 
 -- --------------------------------------------------------
@@ -245,7 +244,7 @@ CREATE TABLE `products` (
   `file_name3` varchar(255) NOT NULL DEFAULT 'image.png',
   `file_name4` varchar(255) NOT NULL DEFAULT 'image.png',
   `time` int(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `products`
@@ -289,7 +288,7 @@ CREATE TABLE `service` (
   `file_name3` varchar(255) NOT NULL DEFAULT 'image.png',
   `file_name4` varchar(255) NOT NULL DEFAULT 'image.png',
   `time` int(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `service`
@@ -322,7 +321,7 @@ CREATE TABLE `slider` (
   `link1` varchar(255) NOT NULL,
   `link2` varchar(255) NOT NULL,
   `file_name` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `slider`
@@ -362,7 +361,7 @@ CREATE TABLE `website` (
   `linkedin` varchar(255) NOT NULL,
   `file_name` varchar(255) NOT NULL,
   `favicon_name` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `website`
@@ -467,7 +466,7 @@ ALTER TABLE `comment`
 -- AUTO_INCREMENT for table `deposit`
 --
 ALTER TABLE `deposit`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `pages`
@@ -485,7 +484,7 @@ ALTER TABLE `payment`
 -- AUTO_INCREMENT for table `person`
 --
 ALTER TABLE `person`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `products`

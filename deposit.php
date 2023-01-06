@@ -48,7 +48,7 @@
               $pmn_address = $_POST['pmn_address'];
               $tr_id = $_POST['tr_id'];
               $amount = $_POST['amount'];
-                $insert = _insert("deposit","pid,method,pmn_address,tr_id,amount","$id,'$method','$pmn_address','$tr_id','$amount'");
+                $insert = _insert("deposit","pid,method,pmn_address,tr_id,amount,time","$id,'$method','$pmn_address','$tr_id','$amount','$time'");
                 if($insert){
                   $msg = "Deposit Successfully";
                   header("location:deposits.php?msg=$msg");

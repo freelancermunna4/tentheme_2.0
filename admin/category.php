@@ -96,12 +96,12 @@
                     $pagination = "ON";
                     if (isset($_GET['page_no']) && $_GET['page_no']!="") {
                     $page_no = $_GET['page_no'];} else {$page_no = 1;}
-                    $total_records_per_page = 8;
+                    $total_records_per_page = 10;
                     $offset = ($page_no-1) * $total_records_per_page;
                     $previous_page = $page_no - 1;
                     $next_page = $page_no + 1;
-                    $adjacents = "2"; 
-
+                    $adjacents = "2";
+                    
                     $category =_query("SELECT * FROM category ORDER BY id DESC LIMIT $offset, $total_records_per_page");
                     $total_records = mysqli_num_rows(_getAll("category")); 
 

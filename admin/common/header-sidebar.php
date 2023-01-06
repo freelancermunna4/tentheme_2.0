@@ -100,6 +100,30 @@
 
       <!-- Sidebar Item -> products -->
       <div class="sidebar_item overflow-hidden">
+        <button class="ds_title" data-ref="deposits"><span class="text-xs transition-all text-pink-600"><i
+              class="fa-solid fa-briefcase"></i></span><span class="tracking-wider block">Deposits</span><span
+            class="text-xs opacity-50 transition-all"><i class="fa-solid fa-chevron-up"></i></span>
+        </button>
+        <ul class="ds_ul transition-all" data-ref="deposits">
+          <li>
+            <a href="./pending-deposits.php">
+              <h4> <i class="fa-solid fa-briefcase"></i> </h4>
+              <span>Pending Deposit</span>
+            </a>
+          </li>
+          <li>
+            <a href="./success-deposits.php">
+              <h4> <i class="fa-solid fa-briefcase"></i> </h4>
+              <span>Published Deposit</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <hr class="my-0">
+      
+
+      <!-- Sidebar Item -> products -->
+      <div class="sidebar_item overflow-hidden">
         <button class="ds_title" data-ref="product"><span class="text-xs transition-all text-pink-600"><i
               class="fa-solid fa-briefcase"></i></span><span class="tracking-wider block">productS</span><span
             class="text-xs opacity-50 transition-all"><i class="fa-solid fa-chevron-up"></i></span>

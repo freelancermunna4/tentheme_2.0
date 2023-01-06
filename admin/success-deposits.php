@@ -8,31 +8,7 @@
                 <div class="overflow-auto bg-white">
                   <div style="display:flex;justify-content:space-between">
                     <div style="display:flex">
-
-                      <select style="margin: 15px;width:300px;" name="role" class="input" id="role">
-                          <?php if(isset($_GET['role'])){?>
-                          <option style="display:none" selected value="<?php echo $_GET['role']?>"><?php echo $_GET['role']?></option>
-                          <?php }else{?>
-                          <option style="display:none" selected>Select</option>
-                          <?php }?>
-                          <option value="User">User</option>
-                          <option value="Moderator">Moderator</option>
-                      </select>
-
-                      <a style="margin:15px;display:block;text-align:center;padding-top:12px;" class="input" href="users.php">Refresh <i  class="fa-solid fa-rotate-right"></i></a>
-
-                      <script type="text/javascript">                         
-
-                          $(function () {
-                              $('#role').on('change', function () {
-                                  var val = $(this).find("option:selected").val();
-                                  var url = self.location.href.split('?')[0] + '?role=' +val;
-                                  if (url != "") {
-                                      window.location.href = url;
-                                  }
-                              });
-                          });
-                      </script>
+                      <a style="margin:15px;display:block;text-align:center;padding-top:12px;" class="input" href="pending-deposits.php">Refresh <i  class="fa-solid fa-rotate-right"></i></a>
                     </div>
 
                     <div>
@@ -53,10 +29,10 @@
                     if(isset($_POST['check_list'])){
                       $check_list = $_POST['check_list'];
                       for($i=0;$i<count($check_list);$i++){
-                        $delete = _delete("person","id=$check_list[$i]");
+                        $delete = _delete("deposit","id=$check_list[$i]");
                       }
                       $msg = "Delete Successfully";
-                      header("location:users.php?msg=$msg");
+                      header("location:success-deposits.php?msg=$msg");
                     }
                   }
                   ?>
@@ -73,7 +49,7 @@
                       <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase lg:p-5">Phone</th>
                       <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase lg:p-5">Method</th>
                       <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase lg:p-5">Payment Address</th>
-                      <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase lg:p-5">Transection ID</th>
+                      <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase lg:p-5">Transition ID</th>
                       <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase lg:p-5">Amount</th>
                       <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase lg:p-5">Status</th>
                       <th scope="col" class="text-center p-4 text-xs font-medium text-left text-gray-500 uppercase lg:p-5"> Actions</th>
@@ -83,30 +59,21 @@
                   <tbody class="bg-white divide-y divide-gray-200">
                     <?php
                     if(isset($_GET['src'])){
-                      $src = trim($_GET['src']);
-                      $person = _get("person","role !='Admin' AND (name='$src' OR phone='$src' OR email='$src' OR role='$src' OR address LIKE '%$src%')");                    
-                    }elseif(isset($_GET['role'])){
-                      $src = trim($_GET['role']);
-                      $person = _get("person","role !='Admin' AND role='$src'");                    
-                    }elseif(isset($_GET['sort'])){
-                      if($_GET['sort']== 'ASC'){
-                        $person =_query("SELECT * FROM person WHERE role !='Admin'  ORDER BY name ASC");
-                      }else{
-                        $person =_query("SELECT * FROM person WHERE role !='Admin'  ORDER BY name DESC");
-                      }
+                      $src = trim($_GET['src']); 
+                      $deposit = _query("SELECT deposit.*,person.* FROM deposit INNER JOIN person ON deposit.pid=person.id WHERE deposit.status='Success' AND (person.name='$src' OR person.phone='$src' OR deposit.method='$src' OR deposit.pmn_address='$src' OR  deposit.tr_id='$src' OR  deposit.amount='$src')");
                     }else{
                     
                     $pagination = "ON";
                     if (isset($_GET['page_no']) && $_GET['page_no']!="") {
                     $page_no = $_GET['page_no'];} else {$page_no = 1;}
-                    $total_records_per_page = 8;
+                    $total_records_per_page = 10;
                     $offset = ($page_no-1) * $total_records_per_page;
                     $previous_page = $page_no - 1;
                     $next_page = $page_no + 1;
-                    $adjacents = "2"; 
+                    $adjacents = "2";
 
-                    $deposit =_query("SELECT * FROM deposit WHERE id !='' ORDER BY id DESC LIMIT $offset, $total_records_per_page");
-                    $total_records = mysqli_num_rows(_getAll("deposit")); 
+                    $deposit =_query("SELECT * FROM deposit WHERE status='Success' ORDER BY id DESC LIMIT $offset, $total_records_per_page");
+                    $total_records = mysqli_num_rows(_get("deposit","status='Success'")); 
 
                     $total_no_of_pages = ceil($total_records / $total_records_per_page);
                     $second_last = $total_no_of_pages - 1;
@@ -133,8 +100,7 @@
                           <td class="p-4 text-sm font-normal text-green-500 whitespace-nowrap lg:p-5"><?php echo $data['status']?></td>
                         <?php }?>
                         <td class="text-center p-4 space-x-2 whitespace-nowrap lg:p-5">
-                          <a id="add_bank" href="edit-person.php?src=users&&table=person&&id=<?php echo $data['id']?>" class="popup_show btn bg-red-500 w-fit text-white" style="background:#4ade80;">Edit</a>
-                          <a href="delete.php?src=users&&table=person&&id=<?php echo $data['id']?>" class="popup_show btn bg-red-500 w-fit text-white">Delete</a>                          
+                          <a href="delete.php?src=success-deposits&&table=deposit&&id=<?php echo $data['id']?>" class="popup_show btn bg-red-500 w-fit text-white">Delete</a>                          
                         </td>
                       </tr>
                       <?php }?>

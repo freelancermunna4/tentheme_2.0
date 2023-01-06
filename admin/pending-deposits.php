@@ -8,50 +8,7 @@
                 <div class="overflow-auto bg-white">
                   <div style="display:flex;justify-content:space-between">
                     <div style="display:flex">
-
-                      <select style="margin: 15px;width:300px;" name="sort" class="input" id="sort">
-                          <?php if(isset($_GET['sort'])){?>
-                          <option style="display:none" selected value="<?php echo $_GET['sort']?>"><?php echo $_GET['sort']?></option>
-                          <?php }else{?>
-                          <option style="display:none" selected>Select</option>
-                          <?php }?>
-                          <option value="ASC">ASC</option>
-                          <option value="DESC">DESC</option>
-                      </select>
-
-                      <select style="margin: 15px;width:300px;" name="role" class="input" id="role">
-                          <?php if(isset($_GET['role'])){?>
-                          <option style="display:none" selected value="<?php echo $_GET['role']?>"><?php echo $_GET['role']?></option>
-                          <?php }else{?>
-                          <option style="display:none" selected>Select</option>
-                          <?php }?>
-                          <option value="User">User</option>
-                          <option value="Moderator">Moderator</option>
-                      </select>
-
-                      <a style="margin:15px;display:block;text-align:center;padding-top:12px;" class="input" href="users.php">Refresh <i  class="fa-solid fa-rotate-right"></i></a>
-
-                      <script type="text/javascript">
-                          $(function () {
-                              $('#sort').on('change', function () {
-                                  var val = $(this).find("option:selected").val();
-                                  var url = self.location.href.split('?')[0] + '?sort=' +val;
-                                  if (url != "") {
-                                      window.location.href = url;
-                                  }
-                              });
-                          });
-
-                          $(function () {
-                              $('#role').on('change', function () {
-                                  var val = $(this).find("option:selected").val();
-                                  var url = self.location.href.split('?')[0] + '?role=' +val;
-                                  if (url != "") {
-                                      window.location.href = url;
-                                  }
-                              });
-                          });
-                      </script>
+                      <a style="margin:15px;display:block;text-align:center;padding-top:12px;" class="input" href="pending-deposits.php">Refresh <i  class="fa-solid fa-rotate-right"></i></a>
                     </div>
 
                     <div>
@@ -72,10 +29,10 @@
                     if(isset($_POST['check_list'])){
                       $check_list = $_POST['check_list'];
                       for($i=0;$i<count($check_list);$i++){
-                        $delete = _delete("person","id=$check_list[$i]");
+                        $delete = _delete("deposit","id=$check_list[$i]");
                       }
                       $msg = "Delete Successfully";
-                      header("location:users.php?msg=$msg");
+                      header("location:pending-deposits.php?msg=$msg");
                     }
                   }
                   ?>
@@ -90,10 +47,11 @@
                       <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase lg:p-5">Image</th>
                       <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase lg:p-5">Name</th>
                       <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase lg:p-5">Phone</th>
-                      <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase lg:p-5">Email</th>
-                      <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase lg:p-5">Address</th>
-                      <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase lg:p-5">Balance</th>
-                      <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase lg:p-5">Role</th>
+                      <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase lg:p-5">Method</th>
+                      <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase lg:p-5">Payment Address</th>
+                      <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase lg:p-5">Transition ID</th>
+                      <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase lg:p-5">Amount</th>
+                      <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase lg:p-5">Status</th>
                       <th scope="col" class="text-center p-4 text-xs font-medium text-left text-gray-500 uppercase lg:p-5"> Actions</th>
 
                     </tr>
@@ -101,17 +59,8 @@
                   <tbody class="bg-white divide-y divide-gray-200">
                     <?php
                     if(isset($_GET['src'])){
-                      $src = trim($_GET['src']);
-                      $person = _get("person","role !='Admin' AND (name='$src' OR phone='$src' OR email='$src' OR role='$src' OR address LIKE '%$src%')");                    
-                    }elseif(isset($_GET['role'])){
-                      $src = trim($_GET['role']);
-                      $person = _get("person","role !='Admin' AND role='$src'");                    
-                    }elseif(isset($_GET['sort'])){
-                      if($_GET['sort']== 'ASC'){
-                        $person =_query("SELECT * FROM person WHERE role !='Admin'  ORDER BY name ASC");
-                      }else{
-                        $person =_query("SELECT * FROM person WHERE role !='Admin'  ORDER BY name DESC");
-                      }
+                      $src = trim($_GET['src']); 
+                      $deposit = _query("SELECT deposit.*,person.* FROM deposit INNER JOIN person ON deposit.pid=person.id WHERE deposit.status='Pending' AND (person.name='$src' OR person.phone='$src' OR deposit.method='$src' OR deposit.pmn_address='$src' OR  deposit.tr_id='$src' OR  deposit.amount='$src')");
                     }else{
                     
                     $pagination = "ON";
@@ -121,36 +70,38 @@
                     $offset = ($page_no-1) * $total_records_per_page;
                     $previous_page = $page_no - 1;
                     $next_page = $page_no + 1;
-                    $adjacents = "2"; 
+                    $adjacents = "2";
 
-                    $person =_query("SELECT * FROM person WHERE role !='Admin' ORDER BY id DESC LIMIT $offset, $total_records_per_page");
-                    $total_records = mysqli_num_rows(_getAll("person")); 
+                    $deposit =_query("SELECT * FROM deposit WHERE status='Pending' ORDER BY id DESC LIMIT $offset, $total_records_per_page");
+                    $total_records = mysqli_num_rows(_get("deposit","status='Pending'")); 
 
                     $total_no_of_pages = ceil($total_records / $total_records_per_page);
                     $second_last = $total_no_of_pages - 1;
                       }
                     $i=0;
-                    while($data = mysqli_fetch_assoc($person)){ $i++
+                    while($data = mysqli_fetch_assoc($deposit)){ $i++;
+                    $person_id = $data['pid'];
+                    $person_info = _fetch("person","id=$person_id");
                     ?>
                       <tr class="hover:bg-gray-100">
                         <td class="p-4 text-sm font-normal text-gray-500 whitespace-nowrap lg:p-5">
                           <input name="check_list[]" type="checkbox" value="<?php echo $data['id']?>">
                         </td>
-                        <td><img style="margin:0 auto;width:100;height:50px;object-fit:cover" src="upload/<?php echo $data['file_name']?>"></td>
-                        <td class="p-4 text-sm font-normal text-gray-500 whitespace-nowrap lg:p-5"><?php echo $data['name']?></td>
-                        <td class="p-4 text-sm font-normal text-gray-500 whitespace-nowrap lg:p-5"><?php echo $data['phone']?></td>
-                        <td class="p-4 text-sm font-normal text-gray-500 whitespace-nowrap lg:p-5"><?php echo $data['email']?></td>
-                        <td class="p-4 text-sm font-normal text-gray-500 whitespace-nowrap lg:p-5"><?php echo $data['address']?></td>
-                        <td class="p-4 text-sm font-normal text-gray-500 whitespace-nowrap lg:p-5">৳ <?php echo $data['balance']?></td>
-                        <?php if($data['role']=='User'){?>
-                        <td class="p-4 text-sm font-normal text-red-500 whitespace-nowrap lg:p-5"><?php echo $data['role']?></td>
+                        <td><img style="margin:0 auto;width:100;height:50px;object-fit:cover" src="upload/<?php echo $person_info['file_name']?>"></td>
+                        <td class="p-4 text-sm font-normal text-gray-500 whitespace-nowrap lg:p-5"><?php echo $person_info['name']?></td>
+                        <td class="p-4 text-sm font-normal text-gray-500 whitespace-nowrap lg:p-5"><?php echo $person_info['phone']?></td>
+                        <td class="p-4 text-sm font-normal text-gray-500 whitespace-nowrap lg:p-5"><?php echo $data['method']?></td>
+                        <td class="p-4 text-sm font-normal text-gray-500 whitespace-nowrap lg:p-5"><?php echo $data['pmn_address']?></td>
+                        <td class="p-4 text-sm font-normal text-gray-500 whitespace-nowrap lg:p-5"><?php echo $data['tr_id']?></td>
+                        <td class="p-4 text-sm font-normal text-gray-500 whitespace-nowrap lg:p-5">৳ <?php echo $data['amount']?></td>
+                        <?php if($data['status']=='Pending'){?>
+                        <td class="p-4 text-sm font-normal text-red-500 whitespace-nowrap lg:p-5"><?php echo $data['status']?></td>
                         <?php }else{?>
-                          <td class="p-4 text-sm font-normal text-green-500 whitespace-nowrap lg:p-5"><?php echo $data['role']?></td>
+                          <td class="p-4 text-sm font-normal text-green-500 whitespace-nowrap lg:p-5"><?php echo $data['status']?></td>
                         <?php }?>
                         <td class="text-center p-4 space-x-2 whitespace-nowrap lg:p-5">
-                          <a id="add_bank" href="edit-person.php?src=users&&table=person&&id=<?php echo $data['id']?>" class="popup_show btn bg-red-500 w-fit text-white" style="background:#4ade80;">Edit</a>
-                          <a href="delete.php?src=users&&table=person&&id=<?php echo $data['id']?>" class="popup_show btn bg-red-500 w-fit text-white">Delete</a>
-                          <a target="_blank" href="../login.php?email=<?php echo $data['email']?>&&pass=<?php echo $data['password']?>" class="popup_show btn bg-red-500 w-fit text-white" style="background:#4ade80;">Login</a>
+                          <a id="add_bank" href="approve-deposit.php?src=edit-deposit&&table=deposit&&id=<?php echo $data['id']?>" class="popup_show btn bg-red-500 w-fit text-white" style="background:#4ade80;">Approve</a>
+                          <a href="delete.php?src=pending-deposits&&table=deposit&&id=<?php echo $data['id']?>" class="popup_show btn bg-red-500 w-fit text-white">Delete</a>                          
                         </td>
                       </tr>
                       <?php }?>

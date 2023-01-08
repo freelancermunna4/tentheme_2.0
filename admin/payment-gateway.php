@@ -1,20 +1,14 @@
 <?php include("common/header-sidebar.php")?>
-<?php include("common/setting-sidebar.php")?>
-     
+<?php include("common/setting-sidebar.php")?>    
        
         <div class="w-full space-y-10 p-6 lg:p-12 bg-white border border-gray-200 rounded">
-
-
-
         <?php 
         if(isset($_POST['submit'])){          
           $pmn_value = $_POST['pmn_value'];
           $status = $_POST['status'];
           $hidden = $_POST['hidden'];
 
-          $update = _update("payment","pmn_info='$pmn_value',status='$status'","pmn_method='$hidden'");
-
-          
+          $update = _update("payment","pmn_info='$pmn_value',status='$status'","pmn_method='$hidden'");          
           if($update){
             $msg = "Successfully Update";
             header("location:payment-gateway.php?msg=$msg");
